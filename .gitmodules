@@ -1,0 +1,3 @@
+[submodule "BwFramework"]
+	path = BwFramework
+	url = https://github.com/MeysamS/BitWrite-Framework.git
