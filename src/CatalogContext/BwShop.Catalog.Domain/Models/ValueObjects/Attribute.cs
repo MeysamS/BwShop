@@ -1,13 +1,13 @@
 using Bw.Domain.Model;
 
-namespace BwShop.Product.Domain.Models.ValueObjects;
+namespace BwShop.Catalog.Domain.Models.ValueObjects;
 
-public class Attribute : ValueObject
+public class ProductAttribute : ValueObject
 {
     public string Name { get; }
     public string Value { get; }
 
-    public Attribute(string name, string value)
+    public ProductAttribute(string name, string value)
     {
         if (string.IsNullOrWhiteSpace(name))
         {

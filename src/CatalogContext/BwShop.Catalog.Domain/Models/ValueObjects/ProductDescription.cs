@@ -1,6 +1,6 @@
 using Bw.Domain.Model;
 
-namespace BwShop.Product.Domain.Models.ValueObjects;
+namespace BwShop.Catalog.Domain.Models.ValueObjects;
 
 public class ProductDescription : ValueObject
 {

@@ -1,6 +1,6 @@
 using Bw.Domain.Model;
 
-namespace BwShop.Product.Domain.Models.Entities;
+namespace BwShop.Catalog.Domain.Models.Entities;
 
 public class Review : Entity<Guid>
 {

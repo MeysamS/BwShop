@@ -1,7 +1,7 @@
 using Bw.Domain.Model;
-using BwShop.Product.Domain.Models.ValueObjects;
+using BwShop.Catalog.Domain.Models.ValueObjects;
 
-namespace BwShop.Product.Domain.Models.Entities;
+namespace BwShop.Catalog.Domain.Models.Entities;
 
 public class ProductVariant : Entity<Guid>
 {
@@ -9,13 +9,11 @@ public class ProductVariant : Entity<Guid>
     public string Size { get; private set; }
     public Guid ProductId { get; private set; }
     public int StockQuantity { get; private set; }
-    public Money DiscountedPrice { get; private set; }
-    public Money CurrentPrice { get; private set; }
 
     public List<ProductImage> Images { get; private set; } = new();
 
     // Constructor
-    public ProductVariant(Guid id, string color, string size, Guid productId)
+    public ProductVariant(Guid id, string color, string size, int stockQuantity, Guid productId)
     {
         if (string.IsNullOrEmpty(color))
             throw new ArgumentException("Color cannot be empty.");
@@ -26,6 +24,7 @@ public class ProductVariant : Entity<Guid>
         Id = id;
         Color = color;
         Size = size;
+        StockQuantity = stockQuantity;
         ProductId = productId;
     }
 
@@ -53,12 +52,12 @@ public class ProductVariant : Entity<Guid>
         StockQuantity -= quantity;
     }
 
-   public void ApplyDiscount(decimal discountPercentage)
+    public void IncreaseStock(int quantity)
     {
-        if (discountPercentage < 0 || discountPercentage > 100)
-            throw new ArgumentException("Discount percentage must be between 0 and 100.");
+        if (quantity <= 0)
+            throw new ArgumentException("Quantity must be greater than zero.");
+        StockQuantity += quantity;
 
-        DiscountedPrice = new Money(CurrentPrice.Amount * (1 - discountPercentage / 100), CurrentPrice.Currency);
     }
 
 }

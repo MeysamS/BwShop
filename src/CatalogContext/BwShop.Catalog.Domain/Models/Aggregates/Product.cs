@@ -1,32 +1,35 @@
+using Bw.Domain;
 using Bw.Domain.Model;
-using BwShop.Product.Domain.Models.Entities;
-using BwShop.Product.Domain.Models.Enums;
-using BwShop.Product.Domain.Models.ValueObjects;
-using Attribute = BwShop.Product.Domain.Models.ValueObjects.Attribute;
+using BwShop.Catalog.Domain.Models.Entities;
+using BwShop.Catalog.Domain.Models.Enums;
+using BwShop.Catalog.Domain.Models.ValueObjects;
 
-namespace BwShop.Product.Domain.Models.Aggregates;
+
+namespace BwShop.Catalog.Domain.Models.Aggregates;
 
 
 public class Product : Aggregate<Guid>
 {
     public string Name { get; private set; }
+    public string Slug { get; private set; }
     public ProductDescription Description { get; private set; }
-    public Status Status { get; private set; }
+    public ProductStatus Status { get; private set; }
     public Guid CategoryId { get; private set; }
-    public Money CurrentPrice { get; private set; }
-    public Money DiscountedPrice { get; private set; }
+
 
     public bool IsInStock => Variants.Any(v => v.StockQuantity > 0);
     private readonly List<Tag> _tags = new();
-    private readonly List<Attribute> _attributes = new();
+    private readonly List<ProductAttribute> _attributes = new();
     private readonly List<ProductImage> _images = new();
     private readonly List<ProductVariant> _variants = new();
     private readonly List<Review> _reviews = new();
+    public List<Category> Categories { get; private set; } = new();
+
 
     public IReadOnlyCollection<ProductVariant> Variants => _variants.AsReadOnly();
     public IReadOnlyCollection<Review> Reviews => _reviews.AsReadOnly();
     public IReadOnlyCollection<Tag> Tags => _tags.AsReadOnly();
-    public IReadOnlyCollection<Attribute> Attributes => _attributes.AsReadOnly();
+    public IReadOnlyCollection<ProductAttribute> Attributes => _attributes.AsReadOnly();
     public IReadOnlyCollection<ProductImage> Images => _images.AsReadOnly();
 
     protected Product() { } // for EF
@@ -40,7 +43,7 @@ public class Product : Aggregate<Guid>
         Name = name;
         Description = description;
         CategoryId = categoryId;
-        Status = Status.Active;
+        Status = ProductStatus.Active;
     }
 
     // Static Factory Method
@@ -48,6 +51,10 @@ public class Product : Aggregate<Guid>
     {
         return new Product(name, description, categoryId);
     }
+
+    public void Publish() => Status = ProductStatus.Published;
+    public void Archive() => Status = ProductStatus.Archived;
+
 
     public void UpdateDetails(string name, ProductDescription description, Guid categoryId)
     {
@@ -68,7 +75,7 @@ public class Product : Aggregate<Guid>
     public void AddAttribute(string name, string value)
     {
         if (_attributes.Any(a => a.Name == name)) throw new InvalidOperationException("Attribute already exists.");
-        _attributes.Add(new Attribute(name, value));
+        _attributes.Add(new ProductAttribute(name, value));
     }
 
     public void AddImage(ProductImage image)
@@ -98,7 +105,7 @@ public class Product : Aggregate<Guid>
         image.SetAsThumbnail();
     }
 
-    public void SetStatus(Status status)
+    public void SetStatus(ProductStatus status)
     {
         Status = status;
     }
@@ -108,10 +115,16 @@ public class Product : Aggregate<Guid>
         if (variant == null)
             throw new ArgumentNullException(nameof(variant));
 
-        if (Variants.Any(v => v.Color == variant.Color && v.Size == variant.Size))
-            throw new InvalidOperationException("Variant with the same color and size already exists.");
+        var existingVariant = _variants.FirstOrDefault(v => v.Color == variant.Color && v.Size == variant.Size);
 
-        _variants.Add(variant);
+        if (existingVariant != null)
+        {
+            existingVariant.IncreaseStock(variant.StockQuantity);
+        }
+        else
+        {
+            _variants.Add(variant);
+        }
     }
 
     public void AddReview(Review review)
@@ -122,28 +135,12 @@ public class Product : Aggregate<Guid>
         _reviews.Add(review);
     }
 
-    public void updatePrice(Money newPrice)
+
+    public void AssignCategory(Category category, int displayOrder)
     {
-        if (newPrice.Amount < 0)
-            throw new ArgumentException("Price cannot be negative.");
-
-
-        CurrentPrice = newPrice;
-        // AddDomainEvent(new ProductPriceChanged(Id, newPrice));
-
-    }
-
-      public void ApplyDiscount(decimal discountPercentage)
-    {
-        if (discountPercentage < 0 || discountPercentage > 100)
-            throw new ArgumentException("Discount percentage must be between 0 and 100.");
-
-        DiscountedPrice = new Money(CurrentPrice.Amount * (1 - discountPercentage / 100), CurrentPrice.Currency);
-
-        // Apply discount to all variants (optional)
-        foreach (var variant in _variants)
+        if (!Categories.Any(c => c.Id == category.Id))
         {
-            variant.ApplyDiscount(discountPercentage);
+            Categories.Add(Category.Create(category.Name,category.Description,displayOrder, category.Id));
         }
     }
 }
