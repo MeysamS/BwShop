@@ -2,6 +2,7 @@ using Bw.Domain;
 using Bw.Domain.Model;
 using BwShop.Catalog.Domain.Models.Entities;
 using BwShop.Catalog.Domain.Models.Enums;
+using BwShop.Catalog.Domain.Models.Events;
 using BwShop.Catalog.Domain.Models.ValueObjects;
 
 
@@ -49,10 +50,16 @@ public class Product : Aggregate<Guid>
     // Static Factory Method
     public static Product Create(string name, ProductDescription description, Guid categoryId)
     {
-        return new Product(name, description, categoryId);
+        var product = new Product(name, description, categoryId);
+        product.AddDomainEvent(new ProductCreatedEvent(product));
+        return product;
     }
 
-    public void Publish() => Status = ProductStatus.Published;
+    public void Publish()
+    {
+        Status = ProductStatus.Published;
+        AddDomainEvent(new ProductPublishedEvent(Id));
+    }
     public void Archive() => Status = ProductStatus.Archived;
 
 
@@ -64,6 +71,9 @@ public class Product : Aggregate<Guid>
         Name = name;
         Description = description;
         CategoryId = categoryId;
+
+        AddDomainEvent(new ProductUpdatedEvent(Id, Name, Description, CategoryId));
+
     }
 
     public void AddTag(string tag)
@@ -87,6 +97,8 @@ public class Product : Aggregate<Guid>
             throw new InvalidOperationException("A thumbnail already exists.");
 
         _images.Add(image);
+        AddDomainEvent(new ProductImageAddedEvent(Id, image.Id));
+
     }
 
     public void SetThumbnail(Guid imageId)
@@ -124,6 +136,8 @@ public class Product : Aggregate<Guid>
         else
         {
             _variants.Add(variant);
+            AddDomainEvent(new ProductVariantAddedEvent(Id, variant.Id, variant.Color, variant.Size, variant.StockQuantity));
+
         }
     }
 
@@ -140,7 +154,9 @@ public class Product : Aggregate<Guid>
     {
         if (!Categories.Any(c => c.Id == category.Id))
         {
-            Categories.Add(Category.Create(category.Name,category.Description,displayOrder, category.Id));
+            Categories.Add(Category.Create(category.Name, category.Description, displayOrder, category.Id));
+            AddDomainEvent(new ProductCategoryAssignedEvent(Id, category.Id, displayOrder));
+
         }
     }
 }

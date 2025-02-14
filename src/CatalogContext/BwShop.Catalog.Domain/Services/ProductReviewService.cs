@@ -1,10 +1,15 @@
+using Bw.Core.Domain.Event.Internal;
 using Bw.Core.Persistence;
 using BwShop.Catalog.Domain.Models.Entities;
+using BwShop.Catalog.Domain.Models.Events;
 using BwShop.Catalog.Domain.Repositories;
 
 namespace BwShop.Catalog.Domain.Services;
 
-public class ProductReviewService(IProductRepository productRepository, IUnitOfWork unitOfWork)
+public class ProductReviewService(
+    IProductRepository productRepository, 
+    IUnitOfWork unitOfWork,
+    IDomainEventPublisher domainEventPublisher)
 {
     public async Task AddReview(Guid productId, Review review)
     {
@@ -14,6 +19,7 @@ public class ProductReviewService(IProductRepository productRepository, IUnitOfW
 
         product.AddReview(review);
         await unitOfWork.CommitAsync();
+        await domainEventPublisher.PublishAsync(new ProductReviewedDomainEvent(productId, review.Rating, review.Id));
     }
 
     public async Task<double> CalculateAverageRating(Guid productId)
