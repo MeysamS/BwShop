@@ -12,7 +12,7 @@ namespace BwShop.Catalog.Domain.Models.Aggregates;
 public class Product : Aggregate<Guid>
 {
     public string Name { get; private set; }
-    public string Slug { get; private set; }
+    public Slug Slug { get; private set; }
     public ProductDescription Description { get; private set; }
     public ProductStatus Status { get; private set; }
     public Guid CategoryId { get; private set; }
@@ -44,6 +44,7 @@ public class Product : Aggregate<Guid>
         Name = name;
         Description = description;
         CategoryId = categoryId;
+        Slug = Slug.Create(name);
         Status = ProductStatus.Active;
     }
 
@@ -70,6 +71,7 @@ public class Product : Aggregate<Guid>
 
         Name = name;
         Description = description;
+        Slug = Slug.Create(name);
         CategoryId = categoryId;
 
         AddDomainEvent(new ProductUpdatedEvent(Id, Name, Description, CategoryId));
@@ -158,5 +160,14 @@ public class Product : Aggregate<Guid>
             AddDomainEvent(new ProductCategoryAssignedEvent(Id, category.Id, displayOrder));
 
         }
+    }
+
+    public void RemoveImage(Guid imageId)
+    {
+        var image = _images.FirstOrDefault(img => img.Id == imageId);
+        if (image == null)
+            throw new ArgumentException("Image not found.");
+
+        _images.Remove(image);
     }
 }
