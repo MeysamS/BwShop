@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\BwShop.Media.Domain\BwShop.Media.Domain.csproj" />
+    <ProjectReference Include="..\..\..\BwFramework\src\Persistence\Bw.Persistence.EFCore\Bw.Persistence.EFCore.csproj" />
+    <ProjectReference Include="..\..\..\BwFramework\src\Persistence\Bw.Persistence.EfCore.Postgres\Bw.Persistence.EfCore.Postgres.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.13" />
+    <PackageReference Include="Minio.AspNetCore" Version="6.0.1" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>

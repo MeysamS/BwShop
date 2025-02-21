@@ -4,4 +4,4 @@ using BwShop.Catalog.Domain.Models.Entities;
 
 namespace BwShop.Catalog.Application.Features.Commands.Products.ProductReviews;
 
-public record AddProductReviewCommand(Guid ProductId, Review Review) : ITxCommand;
+public record AddProductReviewCommand(Guid ProductId, ProductReview Review) : ITxCommand;

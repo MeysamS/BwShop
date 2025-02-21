@@ -11,7 +11,7 @@ public class ProductReviewService(
     IUnitOfWork unitOfWork,
     IDomainEventPublisher domainEventPublisher)
 {
-    public async Task AddReview(Guid productId, Review review)
+    public async Task AddReview(Guid productId, ProductReview review)
     {
         var product = await productRepository.FindByIdAsync(productId)
                      ?? throw new ArgumentException("Product not found.");
