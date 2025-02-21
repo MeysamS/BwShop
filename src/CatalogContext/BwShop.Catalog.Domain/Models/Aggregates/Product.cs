@@ -1,4 +1,3 @@
-using Bw.Domain;
 using Bw.Domain.Model;
 using BwShop.Catalog.Domain.Models.Entities;
 using BwShop.Catalog.Domain.Models.Enums;
@@ -16,22 +15,22 @@ public class Product : Aggregate<Guid>
     public ProductDescription Description { get; private set; }
     public ProductStatus Status { get; private set; }
     public Guid CategoryId { get; private set; }
-
-
+    public virtual Category Category {get;private set;}
     public bool IsInStock => Variants.Any(v => v.StockQuantity > 0);
-    private readonly List<Tag> _tags = new();
+    
+    private readonly List<ProductTag> _tags = new();
     private readonly List<ProductAttribute> _attributes = new();
-    private readonly List<ProductImage> _images = new();
+    // private readonly List<ProductImage> _images = new();
     private readonly List<ProductVariant> _variants = new();
-    private readonly List<Review> _reviews = new();
+    // private readonly List<ProductReview> _reviews = new();
     public List<Category> Categories { get; private set; } = new();
 
 
     public IReadOnlyCollection<ProductVariant> Variants => _variants.AsReadOnly();
-    public IReadOnlyCollection<Review> Reviews => _reviews.AsReadOnly();
-    public IReadOnlyCollection<Tag> Tags => _tags.AsReadOnly();
+    // public IReadOnlyCollection<ProductReview> Reviews => _reviews.AsReadOnly();
+    public IReadOnlyCollection<ProductTag> Tags => _tags.AsReadOnly();
     public IReadOnlyCollection<ProductAttribute> Attributes => _attributes.AsReadOnly();
-    public IReadOnlyCollection<ProductImage> Images => _images.AsReadOnly();
+    // public IReadOnlyCollection<Entities.ProductImage> Images => _images.AsReadOnly();
 
     protected Product() { } // for EF
 
@@ -81,7 +80,7 @@ public class Product : Aggregate<Guid>
     public void AddTag(string tag)
     {
         if (_tags.Any(t => t.Value == tag)) throw new InvalidOperationException("Tag already exists.");
-        _tags.Add(new Tag(tag));
+        _tags.Add(new ProductTag(tag));
     }
 
     public void AddAttribute(string name, string value)
@@ -90,34 +89,34 @@ public class Product : Aggregate<Guid>
         _attributes.Add(new ProductAttribute(name, value));
     }
 
-    public void AddImage(ProductImage image)
-    {
-        if (image == null)
-            throw new ArgumentNullException(nameof(image));
+    // public void AddImage(Entities.ProductImage image)
+    // {
+    //     if (image == null)
+    //         throw new ArgumentNullException(nameof(image));
 
-        if (image.IsThumbnail && Images.Any(img => img.IsThumbnail))
-            throw new InvalidOperationException("A thumbnail already exists.");
+    //     if (image.IsThumbnail && Images.Any(img => img.IsThumbnail))
+    //         throw new InvalidOperationException("A thumbnail already exists.");
 
-        _images.Add(image);
-        AddDomainEvent(new ProductImageAddedEvent(Id, image.Id));
+    //     _images.Add(image);
+    //     AddDomainEvent(new ProductImageAddedEvent(Id, image.Id));
 
-    }
+    // }
 
-    public void SetThumbnail(Guid imageId)
-    {
-        var image = Images.FirstOrDefault(img => img.Id == imageId);
-        if (image == null)
-            throw new ArgumentException("Image not found.");
+    // public void SetThumbnail(Guid imageId)
+    // {
+    //     var image = Images.FirstOrDefault(img => img.Id == imageId);
+    //     if (image == null)
+    //         throw new ArgumentException("Image not found.");
 
-        // Remove thumbnail status from other images
-        foreach (var img in Images)
-        {
-            if (img.IsThumbnail)
-                img.RemoveThumbnail();
-        }
+    //     // Remove thumbnail status from other images
+    //     foreach (var img in Images)
+    //     {
+    //         if (img.IsThumbnail)
+    //             img.RemoveThumbnail();
+    //     }
 
-        image.SetAsThumbnail();
-    }
+    //     image.SetAsThumbnail();
+    // }
 
     public void SetStatus(ProductStatus status)
     {
@@ -143,13 +142,13 @@ public class Product : Aggregate<Guid>
         }
     }
 
-    public void AddReview(Review review)
-    {
-        if (review == null)
-            throw new ArgumentNullException(nameof(review));
+    // public void AddReview(ProductReview review)
+    // {
+    //     if (review == null)
+    //         throw new ArgumentNullException(nameof(review));
 
-        _reviews.Add(review);
-    }
+    //     _reviews.Add(review);
+    // }
 
 
     public void AssignCategory(Category category, int displayOrder)
@@ -162,12 +161,12 @@ public class Product : Aggregate<Guid>
         }
     }
 
-    public void RemoveImage(Guid imageId)
-    {
-        var image = _images.FirstOrDefault(img => img.Id == imageId);
-        if (image == null)
-            throw new ArgumentException("Image not found.");
+    // public void RemoveImage(Guid imageId)
+    // {
+    //     var image = _images.FirstOrDefault(img => img.Id == imageId);
+    //     if (image == null)
+    //         throw new ArgumentException("Image not found.");
 
-        _images.Remove(image);
-    }
+    //     _images.Remove(image);
+    // }
 }

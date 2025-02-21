@@ -1,25 +1,27 @@
 using Bw.Domain.Model;
 
-namespace BwShop.Catalog.Domain.Models.ValueObjects;
+namespace BwShop.Media.Domain.Models.ValueObjects;
 
-public class Tag:ValueObject
+public class FilePath : ValueObject
 {
     public string Value { get; }
 
-    public Tag(string value)
+
+    public FilePath(string value)
     {
-        if (string.IsNullOrWhiteSpace(value))
+        if (!Uri.IsWellFormedUriString(value, UriKind.Absolute))
         {
-            throw new ArgumentException("Tag cannot be empty.", nameof(value));
+            throw new ArgumentException("Invalid Path.", nameof(value));
         }
 
         Value = value;
     }
+
     protected override IEnumerable<object> GetEqualityComponents()
     {
         yield return Value;
     }
-    
+
     public override string ToString()
     {
         return Value;

@@ -10,7 +10,10 @@ public class Category : Aggregate<Guid>
 
     public Guid? ParentCategoryId { get; private set; }
     private readonly List<Guid> _subCategoryIds = new();
+    private readonly List<Product> _products = [];
+
     public IReadOnlyCollection<Guid> SubCategoryIds => _subCategoryIds.AsReadOnly();
+    public IReadOnlyCollection<Product> Products => _products.AsReadOnly();
 
     // Constructor
     private Category(string name, string description, int displayOrder, Guid? parentCategoryId = null)
