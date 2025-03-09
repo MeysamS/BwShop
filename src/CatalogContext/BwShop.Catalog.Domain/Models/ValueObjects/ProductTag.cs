@@ -2,7 +2,7 @@ using Bw.Domain.Model;
 
 namespace BwShop.Catalog.Domain.Models.ValueObjects;
 
-public class ProductTag:ValueObject
+public class ProductTag : ValueObject
 {
     public string Value { get; }
 
@@ -19,7 +19,7 @@ public class ProductTag:ValueObject
     {
         yield return Value;
     }
-    
+
     public override string ToString()
     {
         return Value;

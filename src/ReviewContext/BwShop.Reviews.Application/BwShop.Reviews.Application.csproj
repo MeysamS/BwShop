@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\BwShop.Reviews.Domain\BwShop.Reviews.Domain.csproj" />
+    <ProjectReference Include="..\..\..\BwFramework\src\Bw.Cqrs\Bw.Cqrs.csproj" />
+    <ProjectReference Include="..\..\..\BwFramework\src\Persistence\Bw.Persistence.Mongo\Bw.Persistence.Mongo.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>

@@ -6,4 +6,18 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Bogus" Version="35.6.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.13" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Spectre.Console" Version="0.48.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\BwFramework\src\Extensions\Bw.Extensions.Web\Bw.Extensions.Web.csproj" />
+    <ProjectReference Include="..\..\..\BwFramework\src\Bw.Web\Bw.Web.csproj" />
+    <ProjectReference Include="..\..\..\BwFramework\src\Extensions\Bw.Extensions.Microsoft.DependencyInjection\Bw.Extensions.Microsoft.DependencyInjection.csproj" />
+    <ProjectReference Include="..\..\..\BwFramework\src\Bw.Swagger\Bw.Swagger.csproj" />
+  </ItemGroup>
+
 </Project>
