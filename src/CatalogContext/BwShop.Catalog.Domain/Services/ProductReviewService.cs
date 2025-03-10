@@ -27,6 +27,6 @@ public class ProductReviewService(
         var product = await productRepository.FindByIdAsync(productId)
                      ?? throw new ArgumentException("Product not found.");
 
-        return product.Reviews.Any() ? product.Reviews.Average(r => r.Rating) : 0;
+        return 0; //product.Reviews.Any() ? product.Reviews.Average(r => r.Rating) : 0;
     }
 }

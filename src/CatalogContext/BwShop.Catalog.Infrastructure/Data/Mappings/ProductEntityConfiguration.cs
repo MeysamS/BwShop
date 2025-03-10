@@ -63,10 +63,10 @@ public class ProductEntityConfiguration : IEntityTypeConfiguration<Product>
         //         j.ToTable("ProductCategories");
         //     });
 
-        builder.HasMany(p => p.Images)
-          .WithOne()
-          .HasForeignKey("ProductId")
-          .OnDelete(DeleteBehavior.Cascade);
+        // builder.HasMany(p => p.Images)
+        //   .WithOne()
+        //   .HasForeignKey("ProductId")
+        //   .OnDelete(DeleteBehavior.Cascade);
 
         builder.OwnsMany(p => p.Tags, tagBuilder =>
          {

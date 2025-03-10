@@ -59,7 +59,7 @@ public class ProductMediaRepositoryTests : IClassFixture<ProductMediaRepositoryT
         // Assert
         Assert.NotNull(retrievedMedia);
         Assert.Equal(media.Id, retrievedMedia.Id);
-        Assert.Equal(media.MediaFiles.FirstOrDefault()?.Path.Value, retrievedMedia.MediaFiles.FirstOrDefault()?.Path.Value); u
+        Assert.Equal(media.MediaFiles.FirstOrDefault()?.Path.Value, retrievedMedia.MediaFiles.FirstOrDefault()?.Path.Value);
     }
 
 

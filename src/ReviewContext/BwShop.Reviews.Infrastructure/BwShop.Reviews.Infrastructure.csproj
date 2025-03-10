@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+
+    <ProjectReference Include="..\..\..\BwFramework\src\Persistence\Bw.Persistence.Mongo\Bw.Persistence.Mongo.csproj" />
+    <ProjectReference Include="..\BwShop.Reviews.Domain\BwShop.Reviews.Domain.csproj" />
+    <ProjectReference Include="..\..\..\BwFramework\src\Core\Bw.Core\Bw.Core.csproj" />
+    <ProjectReference Include="..\..\..\BwFramework\src\Extensions\Bw.Extensions\Bw.Extensions.csproj" />
+    <ProjectReference Include="..\..\..\BwFramework\src\Extensions\Bw.Extensions.Web\Bw.Extensions.Web.csproj" />
+    <ProjectReference Include="..\..\..\BwFramework\src\Bw.Web\Bw.Web.csproj" />
+    <ProjectReference Include="..\..\..\BwFramework\src\Bw.Swagger\Bw.Swagger.csproj" />
+    <ProjectReference Include="..\..\..\BwFramework\src\Bw.Logging\Bw.Logging.csproj" />
+    <ProjectReference Include="..\BwShop.Reviews.Application\BwShop.Reviews.Application.csproj" />
+    <ProjectReference Include="..\BwShop.Reviews.Api\BwShop.Reviews.Api.csproj" />
+    <ProjectReference Include="..\..\..\BwFramework\src\Extensions\Bw.Extensions.Cqrs\Bw.Extensions.Cqrs.csproj" />
+    <ProjectReference Include="..\..\..\BwFramework\src\Bw.Caching\Bw.Caching.csproj" />
+    <ProjectReference Include="..\..\..\BwFramework\src\Bw.Validation\Bw.Validation.csproj" />
+    <ProjectReference Include="..\..\..\BwFramework\src\Bw.Security\Bw.Security.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="DotNetEnv" Version="3.1.1" />
+  </ItemGroup>
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>

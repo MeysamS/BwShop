@@ -1,6 +1,5 @@
 using Bw.Core.Cqrs.Commands;
 using BwShop.Media.Application.Features.Commands;
-using BwShop.Media.Application.Services;
 using BwShop.Media.Domain.Models.ValueObjects;
 using Microsoft.AspNetCore.Mvc;
 

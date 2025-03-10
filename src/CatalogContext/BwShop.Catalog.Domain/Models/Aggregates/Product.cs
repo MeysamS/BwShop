@@ -4,9 +4,7 @@ using BwShop.Catalog.Domain.Models.Enums;
 using BwShop.Catalog.Domain.Models.Events;
 using BwShop.Catalog.Domain.Models.ValueObjects;
 
-
 namespace BwShop.Catalog.Domain.Models.Aggregates;
-
 
 public class Product : Aggregate<Guid>
 {
@@ -22,7 +20,6 @@ public class Product : Aggregate<Guid>
     private readonly List<ProductAttribute> _attributes = new();
     // private readonly List<ProductImage> _images = new();
     private readonly List<ProductVariant> _variants = new();
-    // private readonly List<ProductReview> _reviews = new();
     public List<Category> Categories { get; private set; } = new();
 
 
@@ -142,18 +139,18 @@ public class Product : Aggregate<Guid>
         }
     }
 
-    // public void AddReview(ProductReview review)
-    // {
-    //     if (review == null)
-    //         throw new ArgumentNullException(nameof(review));
-
-    //     _reviews.Add(review);
-    // }
+    public void AddReview(ProductReview review)
+    {
+        if (review == null)
+            throw new ArgumentNullException(nameof(review));
+        var reviewAddedEvent = new ReviewAddedDomainEvent(Id,review.Id, review.UserId, review.Rating, review.Comment);
+        AddDomainEvent(reviewAddedEvent);
+    }
 
 
     public void AssignCategory(Category category, int displayOrder)
     {
-        if (!Categories.Any(c => c.Id == category.Id))
+        if (Categories.All(c => c.Id != category.Id))
         {
             Categories.Add(Category.Create(category.Name, category.Description, displayOrder, category.Id));
             AddDomainEvent(new ProductCategoryAssignedEvent(Id, category.Id, displayOrder));

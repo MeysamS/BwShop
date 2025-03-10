@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\BwFramework\src\Core\Bw.Core\Bw.Core.csproj" />
+    <ProjectReference Include="..\BwShop.Reviews.Application\BwShop.Reviews.Application.csproj" />
+    <ProjectReference Include="..\..\..\BwFramework\src\Bw.Web\Bw.Web.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Asp.Versioning.Abstractions" Version="8.1.0" />
+    <PackageReference Include="Hellang.Middleware.ProblemDetails" Version="6.5.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="7.3.1" />
+     <PackageReference Include="AutoMapper" Version="13.0.1" />
+  </ItemGroup>
+
+
+</Project>
