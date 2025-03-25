@@ -1,4 +1,5 @@
 using Bw.Domain.Model;
+using BwShop.Catalog.Domain.Models.Exceptions;
 
 namespace BwShop.Catalog.Domain.Models.Aggregates;
 
@@ -9,20 +10,17 @@ public class Category : Aggregate<Guid>
     public int DisplayOrder { get; private set; }
 
     public Guid? ParentCategoryId { get; private set; }
-    private readonly List<Guid> _subCategoryIds = new();
+    private readonly HashSet<Guid> _subCategoryIds = [];
     private readonly List<Product> _products = [];
 
-    public IReadOnlyCollection<Guid> SubCategoryIds => _subCategoryIds.AsReadOnly();
+    public IReadOnlySet<Guid> SubCategoryIds => _subCategoryIds;
     public IReadOnlyCollection<Product> Products => _products.AsReadOnly();
 
     // Constructor
     private Category(string name, string description, int displayOrder, Guid? parentCategoryId = null)
     {
-        if (string.IsNullOrWhiteSpace(name))
-            throw new ArgumentException("Category name cannot be empty.", nameof(name));
-
         Id = Guid.NewGuid();
-        Name = name;
+        Name = Guard.Against.NullOrWhiteSpace(name, nameof(name));
         Description = description;
         DisplayOrder = displayOrder;
         ParentCategoryId = parentCategoryId;
@@ -37,20 +35,16 @@ public class Category : Aggregate<Guid>
     // Methods
     public void UpdateDetails(string name, string description)
     {
-        if (string.IsNullOrWhiteSpace(name))
-            throw new ArgumentException("Category name cannot be empty.", nameof(name));
-
-        Name = name;
+        Name = Guard.Against.NullOrWhiteSpace(name, nameof(name));
         Description = description;
     }
 
     public void AddSubCategory(Guid subCategoryId)
     {
         if (subCategoryId == Id)
-            throw new InvalidOperationException("A category cannot be its own sub-category.");
+            throw new CategorySelfReferenceException(Id);
 
-        if (!_subCategoryIds.Contains(subCategoryId))
-            _subCategoryIds.Add(subCategoryId);
+        _subCategoryIds.Add(subCategoryId);
     }
 
     public void RemoveSubCategory(Guid subCategoryId)
@@ -61,7 +55,7 @@ public class Category : Aggregate<Guid>
     public void SetParentCategory(Guid parentCategoryId)
     {
         if (parentCategoryId == Id)
-            throw new InvalidOperationException("A category cannot be its own parent.");
+            throw new CategorySelfReferenceException(Id);
 
         ParentCategoryId = parentCategoryId;
     }
